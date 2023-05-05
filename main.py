@@ -20,6 +20,7 @@ def resetter():
     label_work_break.config(text="Resetted")
     label_checkmarks.config(text="")
     new_window.after_cancel(looper)
+    canvas.itemconfig(text_id, text="00:00")
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 def counting_checkmarks(local_tracker):
     if local_tracker ==1:
