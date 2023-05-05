@@ -10,9 +10,16 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 TIME_TRACK = 1
+looper = True
 
 # ---------------------------- TIMER RESET ------------------------------- # 
-
+def resetter():
+    global looper
+    global TIME_TRACK
+    TIME_TRACK = 1
+    label_work_break.config(text="Resetted")
+    label_checkmarks.config(text="")
+    new_window.after_cancel(looper)
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 def counting_checkmarks(local_tracker):
     if local_tracker ==1:
@@ -27,26 +34,27 @@ def start_timer():
     if TIME_TRACK <= 6:
         if TIME_TRACK % 2 != 0:
             label_work_break.config(text="Work!")
-            countdown(15)
+            countdown(WORK_MIN)
             counting_checkmarks(TIME_TRACK)
         elif TIME_TRACK % 2 ==0:
             label_work_break.config(text="Break")
             if TIME_TRACK == 6:
-                countdown(10)
+                countdown(LONG_BREAK_MIN)
             else:
-                countdown(5)
+                countdown(SHORT_BREAK_MIN)
         # print("time track: ", TIME_TRACK)
         TIME_TRACK +=1
     
 # ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
 def countdown(time_):
+    global looper
 
     mins, secs = divmod(time_, 60)
     timer = '{:02d}:{:02d}'.format(mins, secs)
     print(timer, end="\r")
     canvas.itemconfig(text_id, text=timer)
     if time_>0:
-        new_window.after(100,countdown, time_ - 1)
+        looper = new_window.after(100,countdown, time_ - 1)
     else:
         start_timer()
     # print("time_: ", time_)
@@ -78,7 +86,7 @@ button_start = Button(text = "Start", command=start_timer)
 button_start.grid(row=7, column=1)
 
 
-button_reset = Button(text="Reset")
+button_reset = Button(text="Reset", command=resetter)
 button_reset.grid(row=7, column=3)
 
 
